@@ -1,20 +1,21 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
 
-interface IPropsCustomInput {
-  type: string;
+interface IPropCustomSelect {
   label?: string;
   value: string;
   name: string;
   hasError?: boolean;
   required?: boolean;
+  options: string[];
 }
 
-const CustomInput: React.FC<IPropsCustomInput> = ({
+const CustomSelect: React.FC<IPropCustomSelect> = ({
   label = "",
-  required = false,
   name,
   hasError = false,
+  required = false,
+  options,
   ...props
 }) => {
   return (
@@ -26,10 +27,18 @@ const CustomInput: React.FC<IPropsCustomInput> = ({
       <Field
         id={name}
         name={name}
-        className={hasError ? "form-control border-danger" : "form-control"}
+        as="select"
+        className={hasError ? "form-select border-danger" : "form-select"}
         placeholder={`${label}...`}
         {...props}
-      />
+      >
+        <option value="">-----Choose</option>
+        {options.map((value) => (
+          <option key={value} value={value}>
+            {value}
+          </option>
+        ))}
+      </Field>
       <ErrorMessage name={name}>
         {(msg: string) => <div className="invalid-feedback d-block">{msg}</div>}
       </ErrorMessage>
@@ -37,4 +46,4 @@ const CustomInput: React.FC<IPropsCustomInput> = ({
   );
 };
 
-export default CustomInput;
+export default CustomSelect;
