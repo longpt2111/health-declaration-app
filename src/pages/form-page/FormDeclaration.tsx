@@ -37,6 +37,8 @@ const FormDeclaration: React.FC = () => {
       validationSchema={validationSchema}
     >
       {(formikProps) => {
+        const { values, errors, touched } = formikProps;
+
         return (
           <Form>
             <div className="row">
@@ -50,6 +52,8 @@ const FormDeclaration: React.FC = () => {
                   type="text"
                   label="Full name"
                   name="fullName"
+                  value={values.fullName}
+                  error={!!errors.fullName && touched.fullName}
                   required
                 />
               </div>
