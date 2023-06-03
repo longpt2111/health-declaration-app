@@ -9,4 +9,9 @@ export const validationSchema = Yup.object({
   gender: Yup.string().required(requiredFieldError("Gender")),
   nationality: Yup.string().required(requiredFieldError("Nationality")),
   nationId: Yup.string().required(requiredFieldError("Nation ID")),
+  province: Yup.string().required(requiredFieldError("Contact province")),
+  district: Yup.string().required(requiredFieldError("Contact district")),
+  address: Yup.string().required(requiredFieldError("Contact address")),
+  email: Yup.string().required(requiredFieldError("Email")),
+  mobile: Yup.string().required(requiredFieldError("Mobile")),
 });

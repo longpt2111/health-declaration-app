@@ -33,11 +33,13 @@ const CustomSelect: React.FC<IPropCustomSelect> = ({
         {...props}
       >
         <option value="">-----Choose</option>
-        {options.map((value) => (
-          <option key={value} value={value}>
-            {value}
-          </option>
-        ))}
+        {options &&
+          options.length > 0 &&
+          options.map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
       </Field>
       <ErrorMessage name={name}>
         {(msg: string) => <div className="invalid-feedback d-block">{msg}</div>}

@@ -5,7 +5,7 @@ import CustomInput from "../../components/custom-input";
 import { validationSchema } from "./validation-schema";
 import CustomSelect from "../../components/custom-select";
 import {
-  districtOptions,
+  districtsOfProvinceOptions,
   genderOptions,
   nationalityOptions,
   objectOptions,
@@ -143,7 +143,39 @@ const FormDeclaration: React.FC = () => {
                   name="district"
                   value={values.district}
                   hasError={!!errors.district && touched.district}
-                  options={districtOptions}
+                  options={districtsOfProvinceOptions(values.province)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="mt-4 row">
+              <div className="col-lg-6">
+                <CustomInput
+                  type="text"
+                  label="Address"
+                  name="address"
+                  value={values.address}
+                  hasError={!!errors.address && touched.address}
+                  required
+                />
+              </div>
+              <div className="col-lg-3">
+                <CustomInput
+                  type="email"
+                  label="Email"
+                  name="email"
+                  value={values.email}
+                  hasError={!!errors.email && touched.email}
+                  required
+                />
+              </div>
+              <div className="col-lg-3">
+                <CustomInput
+                  type="tel"
+                  label="Mobile"
+                  name="mobile"
+                  value={values.mobile}
+                  hasError={!!errors.mobile && touched.mobile}
                   required
                 />
               </div>
