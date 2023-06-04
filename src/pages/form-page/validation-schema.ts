@@ -12,6 +12,8 @@ export const validationSchema = Yup.object({
   province: Yup.string().required(requiredFieldError("Contact province")),
   district: Yup.string().required(requiredFieldError("Contact district")),
   address: Yup.string().required(requiredFieldError("Contact address")),
-  email: Yup.string().required(requiredFieldError("Email")),
+  email: Yup.string()
+    .email("Email is invalid")
+    .required(requiredFieldError("Email")),
   mobile: Yup.string().required(requiredFieldError("Mobile")),
 });

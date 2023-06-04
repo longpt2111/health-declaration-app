@@ -120,7 +120,21 @@ const FormDeclaration: React.FC = () => {
                 />
               </div>
             </div>
-            {/*  */}
+            <div className="row">
+              <div className="col-lg-12">
+                <h4 className="fs-5 fw-bold">Travel:</h4>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-12">
+                <div className="d-flex align-items-center gap-4">
+                  <h6>Do you travel in the last 14 days ?</h6>
+                  <button type="button" className="btn btn-warning">
+                    Add more
+                  </button>
+                </div>
+              </div>
+            </div>
             <div className="mt-4 row">
               <div className="col-lg-12">
                 <h4 className="fs-5 fw-bold">Contact:</h4>
