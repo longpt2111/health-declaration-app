@@ -27,3 +27,17 @@ export const districtsOfProvinceOptions = (province: string | undefined) => {
     (vnProvinceDistrict as IPropsProvinceDistrict)[provinceKey].cities
   );
 };
+
+export const checkboxOptions = [
+  "Fiber",
+  "Fever",
+  "Sore throat",
+  "Difficulty of breathing",
+];
+
+export const vaccinesOptions = [
+  "Astra Zenecca",
+  "Pfizer",
+  "Moderna",
+  "Sinopharm",
+];

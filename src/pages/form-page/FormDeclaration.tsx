@@ -5,12 +5,16 @@ import CustomInput from "../../components/custom-input";
 import { validationSchema } from "./validation-schema";
 import CustomSelect from "../../components/custom-select";
 import {
+  checkboxOptions,
   districtsOfProvinceOptions,
   genderOptions,
   nationalityOptions,
   objectOptions,
   provinceOptions,
+  vaccinesOptions,
 } from "./formOptions";
+import CustomCheckbox from "../../components/custom-checkbox";
+import CustomRadio from "../../components/custom-radio";
 
 const FormDeclaration: React.FC = () => {
   const initialValues: IFormData = {
@@ -191,6 +195,34 @@ const FormDeclaration: React.FC = () => {
                   value={values.mobile}
                   hasError={!!errors.mobile && touched.mobile}
                   required
+                />
+              </div>
+            </div>
+            <div className="mt-4 row">
+              <div className="col-lg-12">
+                <h4 className="fs-5 fw-bold">Symptoms:</h4>
+              </div>
+            </div>
+            <div className="mb-4 row">
+              <div className="col-lg-10">
+                <CustomCheckbox
+                  label="Do you have any following symptoms?"
+                  name="symptoms"
+                  options={checkboxOptions}
+                />
+              </div>
+            </div>
+            <div className="mt-4 row">
+              <div className="col-lg-12">
+                <h4 className="fs-5 fw-bold">Vaccines:</h4>
+              </div>
+            </div>
+            <div className="mb-4 row">
+              <div className="col-lg-10">
+                <CustomRadio
+                  label="Which one would you like to vaccinate ?"
+                  name="vaccines"
+                  options={vaccinesOptions}
                 />
               </div>
             </div>
