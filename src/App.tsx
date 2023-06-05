@@ -8,7 +8,7 @@ const App: React.FC = () => {
     <Routes>
       <Route path="/table" element={<TablePage />} />
       <Route path="/declaration" element={<FormPage />} />
-      <Route path="/edit/:id" element={<FormPage />} />
+      <Route path="/edit/:id" element={<FormPage isEditMode />} />
       <Route path="*" element={<Navigate to="/table" />} />
     </Routes>
   );

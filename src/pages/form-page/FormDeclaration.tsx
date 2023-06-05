@@ -1,6 +1,6 @@
-import { FieldArray, Form, Formik, FormikErrors, FormikHelpers } from "formik";
+import { FieldArray, Form, Formik, FormikErrors } from "formik";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CustomCheckbox from "../../components/custom-checkbox";
 import CustomInput from "../../components/custom-input";
 import CustomRadio from "../../components/custom-radio";
@@ -18,40 +18,57 @@ import {
 import { validationSchema } from "./validation-schema";
 import generateUniqueId from "../../helpers/generateId.helper";
 
-const FormDeclaration: React.FC = () => {
+interface IPropsFormDeclaration {
+  isEditMode?: boolean;
+}
+
+const FormDeclaration: React.FC<IPropsFormDeclaration> = ({ isEditMode }) => {
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const initialValues: IFormData = {
-    fullName: "",
-    object: "",
-    dateOfBirth: "",
-    gender: "",
-    nationality: "",
-    nationId: "",
-    travels: [],
-    province: "",
-    district: "",
-    address: "",
-    mobile: "",
-    email: "",
-    symptoms: [],
-    vaccines: "",
-  };
+  const localValues: IFormData[] = JSON.parse(
+    localStorage.getItem("covid-form") || "[]"
+  );
 
-  const handleSubmit = (
-    values: IFormData,
-    actions: FormikHelpers<IFormData>
-  ) => {
-    console.log(values);
-    console.log(actions);
+  let initialValues: IFormData;
 
-    const localValues: IFormData[] = JSON.parse(
-      localStorage.getItem("covid-form") || "[]"
-    );
-    localStorage.setItem(
-      "covid-form",
-      JSON.stringify([{ id: generateUniqueId(), ...values }, ...localValues])
-    );
+  if (isEditMode) {
+    initialValues = localValues.find(
+      (userInfo: IFormData) => userInfo.id === id
+    ) as IFormData;
+  } else {
+    initialValues = {
+      fullName: "",
+      object: "",
+      dateOfBirth: "",
+      gender: "",
+      nationality: "",
+      nationId: "",
+      travels: [],
+      province: "",
+      district: "",
+      address: "",
+      mobile: "",
+      email: "",
+      symptoms: [],
+      vaccines: "",
+    };
+  }
+
+  const handleSubmit = (values: IFormData) => {
+    if (isEditMode) {
+      const userInfoIndex = localValues.findIndex(
+        (userInfo: IFormData) => userInfo.id === id
+      );
+      localValues.splice(userInfoIndex, 1, { id: id, ...values });
+      localStorage.setItem("covid-form", JSON.stringify(localValues));
+    } else {
+      localStorage.setItem(
+        "covid-form",
+        JSON.stringify([{ id: generateUniqueId(), ...values }, ...localValues])
+      );
+    }
+
     navigate("/table");
   };
 
@@ -63,7 +80,6 @@ const FormDeclaration: React.FC = () => {
     >
       {(formikProps) => {
         const { values, errors, touched, resetForm } = formikProps;
-
         return (
           <Form>
             <div className="row">

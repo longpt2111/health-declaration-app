@@ -7,13 +7,15 @@ const Table: React.FC = () => {
     JSON.parse(localStorage.getItem("covid-form") as string) || []
   );
 
-  const handleDeleteUser = (index: number) => {
-    const updatedUsersInfo: IFormData[] = JSON.parse(
-      localStorage.getItem("covid-form") as string
-    ).filter((_: IFormData, i: number) => i !== index);
-    localStorage.removeItem("covid-form");
-    localStorage.setItem("covid-form", JSON.stringify(updatedUsersInfo));
-    setAllUsersInfo(updatedUsersInfo);
+  const handleDeleteUser = (id: string | undefined, index: number) => {
+    if (confirm(`Do you want to delete form with ID: ${id}`)) {
+      const updatedUsersInfo: IFormData[] = JSON.parse(
+        localStorage.getItem("covid-form") as string
+      ).filter((_: IFormData, i: number) => i !== index);
+      localStorage.removeItem("covid-form");
+      localStorage.setItem("covid-form", JSON.stringify(updatedUsersInfo));
+      setAllUsersInfo(updatedUsersInfo);
+    }
   };
 
   return (
@@ -58,7 +60,7 @@ const Table: React.FC = () => {
                   </Link>
                   <button
                     className="btn text-danger m-0 p-0"
-                    onClick={() => handleDeleteUser(index)}
+                    onClick={() => handleDeleteUser(id, index)}
                   >
                     <i className="fa fa-trash-alt"></i>
                   </button>

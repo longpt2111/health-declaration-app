@@ -1,7 +1,11 @@
 import React from "react";
 import FormDeclaration from "./FormDeclaration";
 
-const FormPage: React.FC = () => {
+interface IPropsFormPage {
+  isEditMode?: boolean;
+}
+
+const FormPage: React.FC<IPropsFormPage> = ({ isEditMode }) => {
   return (
     <div className="container-fluid">
       <div className="container">
@@ -14,7 +18,7 @@ const FormPage: React.FC = () => {
         </div>
         <div className="row">
           <div className="col-lg-12">
-            <FormDeclaration />
+            <FormDeclaration isEditMode={isEditMode} />
           </div>
         </div>
       </div>
