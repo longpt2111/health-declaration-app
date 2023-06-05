@@ -1,5 +1,5 @@
 import { FieldArray, Form, Formik, FormikErrors, FormikHelpers } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import CustomCheckbox from "../../components/custom-checkbox";
 import CustomInput from "../../components/custom-input";
@@ -18,7 +18,6 @@ import {
 import { validationSchema } from "./validation-schema";
 
 const FormDeclaration: React.FC = () => {
-  const [hasTravelForm, setHasTravelForm] = useState(false);
   const navigate = useNavigate();
 
   const initialValues: IFormData = {
@@ -44,6 +43,15 @@ const FormDeclaration: React.FC = () => {
   ) => {
     console.log(values);
     console.log(actions);
+
+    const localValues: IFormData[] = JSON.parse(
+      localStorage.getItem("covid-form") || "[]"
+    );
+    localStorage.setItem(
+      "covid-form",
+      JSON.stringify([values, ...localValues])
+    );
+    navigate("/table");
   };
 
   return (
@@ -136,32 +144,7 @@ const FormDeclaration: React.FC = () => {
             <FieldArray name="travels">
               {({ push, remove }) => (
                 <>
-                  {!hasTravelForm && (
-                    <div className="row">
-                      <div className="col-lg-12">
-                        <div className="d-flex align-items-center gap-4">
-                          <h6>Do you travel in the last 14 days ?</h6>
-                          <button
-                            type="button"
-                            className="btn btn-warning"
-                            onClick={() => {
-                              push({
-                                departureDate: "",
-                                immigrationDate: "",
-                                departure: "",
-                                destination: "",
-                              });
-                              setHasTravelForm(true);
-                            }}
-                          >
-                            Add more
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {values.travels &&
-                    values.travels.length > 0 &&
+                  {values.travels && values.travels.length > 0 ? (
                     values.travels.map((travel, index) => (
                       <div key={index} className="row">
                         <div className="col-lg-12">
@@ -255,11 +238,7 @@ const FormDeclaration: React.FC = () => {
                               <button
                                 type="button"
                                 className="btn btn-danger"
-                                onClick={() => {
-                                  remove(index);
-                                  if (values.travels.length <= 1)
-                                    setHasTravelForm(false);
-                                }}
+                                onClick={() => remove(index)}
                               >
                                 Delete
                               </button>
@@ -267,7 +246,30 @@ const FormDeclaration: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                    ))}
+                    ))
+                  ) : (
+                    <div className="row">
+                      <div className="col-lg-12">
+                        <div className="d-flex align-items-center gap-4">
+                          <h6>Do you travel in the last 14 days ?</h6>
+                          <button
+                            type="button"
+                            className="btn btn-warning"
+                            onClick={() => {
+                              push({
+                                departureDate: "",
+                                immigrationDate: "",
+                                departure: "",
+                                destination: "",
+                              });
+                            }}
+                          >
+                            Add more
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
             </FieldArray>
@@ -374,7 +376,11 @@ const FormDeclaration: React.FC = () => {
                   >
                     Cancel
                   </button>
-                  <button type="button" className="btn btn-secondary btn-lg">
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-lg"
+                    onClick={() => resetForm()}
+                  >
                     Reset
                   </button>
                 </div>

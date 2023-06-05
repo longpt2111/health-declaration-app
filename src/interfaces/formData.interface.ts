@@ -11,8 +11,8 @@ export interface IFormData {
   address: string;
   mobile: string;
   email: string;
-  symptoms: string[];
-  vaccines: string;
+  symptoms?: string[];
+  vaccines?: string;
 }
 
 export interface ITravelForm {

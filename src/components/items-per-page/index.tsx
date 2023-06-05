@@ -17,7 +17,7 @@ const ItemsPerPage: React.FC<IPropsItemsPerPage> = ({
         value={itemsPerPage}
         onChange={handleChangeItemsPerPage}
       >
-        <option value="2" selected>
+        <option value="2" defaultChecked>
           2
         </option>
         <option value="4">4</option>
