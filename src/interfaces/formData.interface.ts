@@ -5,7 +5,7 @@ export interface IFormData {
   gender: string;
   nationality: string;
   nationId: string;
-  travels: string[];
+  travels: ITravelForm[];
   province: string;
   district: string;
   address: string;
@@ -13,4 +13,11 @@ export interface IFormData {
   email: string;
   symptoms: string[];
   vaccines: string;
+}
+
+export interface ITravelForm {
+  departureDate: string;
+  immigrationDate: string;
+  departure: string;
+  destination: string;
 }

@@ -1,6 +1,6 @@
-import { Formik, FormikHelpers, Form } from "formik";
-import React from "react";
-import { IFormData } from "../../interfaces/formData.interface";
+import { Formik, FormikHelpers, Form, FieldArray, FormikErrors } from "formik";
+import React, { useState } from "react";
+import { IFormData, ITravelForm } from "../../interfaces/formData.interface";
 import CustomInput from "../../components/custom-input";
 import { validationSchema } from "./validation-schema";
 import CustomSelect from "../../components/custom-select";
@@ -17,6 +17,8 @@ import CustomCheckbox from "../../components/custom-checkbox";
 import CustomRadio from "../../components/custom-radio";
 
 const FormDeclaration: React.FC = () => {
+  const [hasTravelForm, setHasTravelForm] = useState(false);
+
   const initialValues: IFormData = {
     fullName: "",
     object: "",
@@ -129,16 +131,132 @@ const FormDeclaration: React.FC = () => {
                 <h4 className="fs-5 fw-bold">Travel:</h4>
               </div>
             </div>
-            <div className="row">
-              <div className="col-lg-12">
-                <div className="d-flex align-items-center gap-4">
-                  <h6>Do you travel in the last 14 days ?</h6>
-                  <button type="button" className="btn btn-warning">
-                    Add more
-                  </button>
-                </div>
-              </div>
-            </div>
+            <FieldArray name="travels">
+              {({ push, remove }) => (
+                <>
+                  {!hasTravelForm && (
+                    <div className="row">
+                      <div className="col-lg-12">
+                        <div className="d-flex align-items-center gap-4">
+                          <h6>Do you travel in the last 14 days ?</h6>
+                          <button
+                            type="button"
+                            className="btn btn-warning"
+                            onClick={() => {
+                              push({ departureDate: "" });
+                              setHasTravelForm(true);
+                            }}
+                          >
+                            Add more
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {values.travels &&
+                    values.travels.length > 0 &&
+                    values.travels.map((travel, index) => (
+                      <div key={index} className="row">
+                        <div className="col-lg-12">
+                          <div className="mt-1 mb-4 row">
+                            <div className="col-lg-12">
+                              <h6 className="fw-bold text-primary">
+                                Travel {index + 1}
+                              </h6>
+                            </div>
+                            <div className="mb-4 col-lg-6">
+                              <CustomInput
+                                type="date"
+                                label="Departure Date"
+                                name={`travels[${index}].departureDate`}
+                                value={travel?.departureDate}
+                                hasError={
+                                  touched.travels?.[index]?.departureDate &&
+                                  !!(
+                                    errors.travels?.[
+                                      index
+                                    ] as FormikErrors<ITravelForm>
+                                  ).departureDate
+                                }
+                              />
+                            </div>
+                            <div className="mb-4 col-lg-6">
+                              <CustomInput
+                                type="date"
+                                label="Immigration Date"
+                                name={`travels[${index}].immigrationDate`}
+                                value={travel?.immigrationDate}
+                                hasError={
+                                  touched.travels?.[index]?.immigrationDate &&
+                                  !!(
+                                    errors.travels?.[
+                                      index
+                                    ] as FormikErrors<ITravelForm>
+                                  ).immigrationDate
+                                }
+                              />
+                            </div>
+                            <div className="col-lg-6">
+                              <CustomSelect
+                                label="Departure"
+                                name={`travels[${index}].departure`}
+                                value={travel?.departure}
+                                hasError={
+                                  touched.travels?.[index]?.departure &&
+                                  !!(
+                                    errors.travels?.[
+                                      index
+                                    ] as FormikErrors<ITravelForm>
+                                  ).departure
+                                }
+                                options={nationalityOptions}
+                                required
+                              />
+                            </div>
+                            <div className="col-lg-6">
+                              <CustomSelect
+                                label="Destination"
+                                name={`travels[${index}].destination`}
+                                value={travel?.destination}
+                                hasError={
+                                  touched.travels?.[index]?.destination &&
+                                  !!(
+                                    errors.travels?.[
+                                      index
+                                    ] as FormikErrors<ITravelForm>
+                                  ).destination
+                                }
+                                options={nationalityOptions}
+                                required
+                              />
+                            </div>
+                            <div className="mt-4 col-lg-12">
+                              <button
+                                type="button"
+                                className="me-3 btn btn-warning"
+                                onClick={() => push({ departureDate: "" })}
+                              >
+                                Add more
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={() => {
+                                  remove(index);
+                                  if (values.travels.length <= 1)
+                                    setHasTravelForm(false);
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </>
+              )}
+            </FieldArray>
             <div className="mt-4 row">
               <div className="col-lg-12">
                 <h4 className="fs-5 fw-bold">Contact:</h4>
@@ -224,6 +342,21 @@ const FormDeclaration: React.FC = () => {
                   name="vaccines"
                   options={vaccinesOptions}
                 />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-12">
+                <div className="d-flex align-items-center gap-3">
+                  <button type="submit" className="btn btn-success btn-lg">
+                    Submit
+                  </button>
+                  <button type="button" className="btn btn-danger btn-lg">
+                    Cancel
+                  </button>
+                  <button type="button" className="btn btn-secondary btn-lg">
+                    Reset
+                  </button>
+                </div>
               </div>
             </div>
           </Form>
