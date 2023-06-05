@@ -16,6 +16,7 @@ import {
   vaccinesOptions,
 } from "./formOptions";
 import { validationSchema } from "./validation-schema";
+import generateUniqueId from "../../helpers/generateId.helper";
 
 const FormDeclaration: React.FC = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const FormDeclaration: React.FC = () => {
     );
     localStorage.setItem(
       "covid-form",
-      JSON.stringify([values, ...localValues])
+      JSON.stringify([{ id: generateUniqueId(), ...values }, ...localValues])
     );
     navigate("/table");
   };

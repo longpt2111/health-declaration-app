@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { IFormData } from "../../interfaces/formData.interface";
-import generateUniqueId from "../../helpers/generateId.helper";
+import { Link } from "react-router-dom";
 
 const Table: React.FC = () => {
   const [allUsersInfo, setAllUsersInfo] = useState<IFormData[]>(
@@ -46,20 +46,23 @@ const Table: React.FC = () => {
       <tbody className="w-100">
         {allUsersInfo.length > 0 ? (
           allUsersInfo.map(
-            ({ fullName, object, dateOfBirth, gender, province }, index) => (
+            (
+              { id, fullName, object, dateOfBirth, gender, province },
+              index
+            ) => (
               <tr key={index} className="w-100">
                 <td className="text-center py-3">{index + 1}</td>
                 <td className="d-flex gap-3 py-3">
-                  <a href="/edit/_671b3">
+                  <Link to={`/edit/${id}`}>
                     <i className="fa fa-edit"></i>
-                  </a>
+                  </Link>
                   <button
                     className="btn text-danger m-0 p-0"
                     onClick={() => handleDeleteUser(index)}
                   >
                     <i className="fa fa-trash-alt"></i>
                   </button>
-                  {generateUniqueId()}
+                  {id}
                 </td>
                 <td
                   className="py-3 text-truncate"

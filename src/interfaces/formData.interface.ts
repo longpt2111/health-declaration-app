@@ -13,6 +13,7 @@ export interface IFormData {
   email: string;
   symptoms?: string[];
   vaccines?: string;
+  id?: string;
 }
 
 export interface ITravelForm {
