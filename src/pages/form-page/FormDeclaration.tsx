@@ -1,9 +1,11 @@
-import { Formik, FormikHelpers, Form, FieldArray, FormikErrors } from "formik";
+import { FieldArray, Form, Formik, FormikErrors, FormikHelpers } from "formik";
 import React, { useState } from "react";
-import { IFormData, ITravelForm } from "../../interfaces/formData.interface";
+import { useNavigate } from "react-router-dom";
+import CustomCheckbox from "../../components/custom-checkbox";
 import CustomInput from "../../components/custom-input";
-import { validationSchema } from "./validation-schema";
+import CustomRadio from "../../components/custom-radio";
 import CustomSelect from "../../components/custom-select";
+import { IFormData, ITravelForm } from "../../interfaces/formData.interface";
 import {
   checkboxOptions,
   districtsOfProvinceOptions,
@@ -13,11 +15,11 @@ import {
   provinceOptions,
   vaccinesOptions,
 } from "./formOptions";
-import CustomCheckbox from "../../components/custom-checkbox";
-import CustomRadio from "../../components/custom-radio";
+import { validationSchema } from "./validation-schema";
 
 const FormDeclaration: React.FC = () => {
   const [hasTravelForm, setHasTravelForm] = useState(false);
+  const navigate = useNavigate();
 
   const initialValues: IFormData = {
     fullName: "",
@@ -51,7 +53,7 @@ const FormDeclaration: React.FC = () => {
       validationSchema={validationSchema}
     >
       {(formikProps) => {
-        const { values, errors, touched } = formikProps;
+        const { values, errors, touched, resetForm } = formikProps;
 
         return (
           <Form>
@@ -143,7 +145,12 @@ const FormDeclaration: React.FC = () => {
                             type="button"
                             className="btn btn-warning"
                             onClick={() => {
-                              push({ departureDate: "" });
+                              push({
+                                departureDate: "",
+                                immigrationDate: "",
+                                departure: "",
+                                destination: "",
+                              });
                               setHasTravelForm(true);
                             }}
                           >
@@ -176,7 +183,7 @@ const FormDeclaration: React.FC = () => {
                                     errors.travels?.[
                                       index
                                     ] as FormikErrors<ITravelForm>
-                                  ).departureDate
+                                  )?.departureDate
                                 }
                               />
                             </div>
@@ -192,7 +199,7 @@ const FormDeclaration: React.FC = () => {
                                     errors.travels?.[
                                       index
                                     ] as FormikErrors<ITravelForm>
-                                  ).immigrationDate
+                                  )?.immigrationDate
                                 }
                               />
                             </div>
@@ -207,7 +214,7 @@ const FormDeclaration: React.FC = () => {
                                     errors.travels?.[
                                       index
                                     ] as FormikErrors<ITravelForm>
-                                  ).departure
+                                  )?.departure
                                 }
                                 options={nationalityOptions}
                                 required
@@ -224,7 +231,7 @@ const FormDeclaration: React.FC = () => {
                                     errors.travels?.[
                                       index
                                     ] as FormikErrors<ITravelForm>
-                                  ).destination
+                                  )?.destination
                                 }
                                 options={nationalityOptions}
                                 required
@@ -234,7 +241,14 @@ const FormDeclaration: React.FC = () => {
                               <button
                                 type="button"
                                 className="me-3 btn btn-warning"
-                                onClick={() => push({ departureDate: "" })}
+                                onClick={() =>
+                                  push({
+                                    departureDate: "",
+                                    immigrationDate: "",
+                                    departure: "",
+                                    destination: "",
+                                  })
+                                }
                               >
                                 Add more
                               </button>
@@ -350,7 +364,14 @@ const FormDeclaration: React.FC = () => {
                   <button type="submit" className="btn btn-success btn-lg">
                     Submit
                   </button>
-                  <button type="button" className="btn btn-danger btn-lg">
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-lg"
+                    onClick={() => {
+                      resetForm();
+                      navigate("/table");
+                    }}
+                  >
                     Cancel
                   </button>
                   <button type="button" className="btn btn-secondary btn-lg">
