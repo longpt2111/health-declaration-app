@@ -17,7 +17,10 @@ import {
 } from "./formOptions";
 import { validationSchema } from "./validation-schema";
 import generateUniqueId from "../../helpers/generateId.helper";
-import { getLocalStorage, setLocalStorage } from "../../helpers/getLocalStorage.helper";
+import {
+  getLocalStorage,
+  setLocalStorage,
+} from "../../helpers/getLocalStorage.helper";
 
 interface IPropsFormDeclaration {
   isEditMode?: boolean;
@@ -77,7 +80,7 @@ const FormDeclaration: React.FC<IPropsFormDeclaration> = ({ isEditMode }) => {
       validationSchema={validationSchema}
     >
       {(formikProps) => {
-        const { values, errors, touched, resetForm } = formikProps;
+        const { values, errors, touched, resetForm, dirty } = formikProps;
         return (
           <Form>
             <div className="row">
@@ -385,8 +388,15 @@ const FormDeclaration: React.FC<IPropsFormDeclaration> = ({ isEditMode }) => {
                     type="button"
                     className="btn btn-danger btn-lg"
                     onClick={() => {
-                      resetForm();
-                      navigate("/table");
+                      if (dirty) {
+                        if (confirm("Do you want to cancel?")) {
+                          resetForm();
+                          navigate("/table");
+                        }
+                      } else {
+                        resetForm();
+                        navigate("/table");
+                      }
                     }}
                   >
                     Cancel
@@ -394,7 +404,13 @@ const FormDeclaration: React.FC<IPropsFormDeclaration> = ({ isEditMode }) => {
                   <button
                     type="button"
                     className="btn btn-secondary btn-lg"
-                    onClick={() => resetForm()}
+                    onClick={() => {
+                      if (dirty) {
+                        if (confirm("Do you want to reset?")) resetForm();
+                      } else {
+                        resetForm();
+                      }
+                    }}
                   >
                     Reset
                   </button>
