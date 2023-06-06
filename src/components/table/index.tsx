@@ -9,9 +9,15 @@ import {
 
 interface IPropsTable {
   searchText: string;
+  itemsPerPage: number;
+  currentPage: number;
 }
 
-const Table: React.FC<IPropsTable> = ({ searchText }) => {
+const Table: React.FC<IPropsTable> = ({
+  searchText,
+  itemsPerPage,
+  currentPage,
+}) => {
   const [allUsersInfo, setAllUsersInfo] = useState<IFormData[]>(
     getLocalStorage("covid-form")
   );
@@ -71,58 +77,63 @@ const Table: React.FC<IPropsTable> = ({ searchText }) => {
       </thead>
       <tbody className="w-100">
         {allUsersInfo.length > 0 ? (
-          allUsersInfo.map(
-            (
-              { id, fullName, object, dateOfBirth, gender, province },
-              index
-            ) => (
-              <tr key={index} className="w-100">
-                <td className="text-center py-3">{index + 1}</td>
-                <td className="d-flex gap-3 py-3">
-                  <Link to={`/edit/${id}`}>
-                    <i className="fa fa-edit"></i>
-                  </Link>
-                  <button
-                    className="btn text-danger m-0 p-0"
-                    onClick={() => handleDeleteUser(id, index)}
-                  >
-                    <i className="fa fa-trash-alt"></i>
-                  </button>
-                  {id}
-                </td>
-                <td
-                  className="py-3 text-truncate"
-                  style={{ maxWidth: "100px", minWidth: "100px" }}
-                >
-                  {fullName}
-                </td>
-                <td
-                  className="py-3 text-truncate"
-                  style={{ maxWidth: "100px", minWidth: "100px" }}
-                >
-                  {object}
-                </td>
-                <td
-                  className="py-3 text-truncate"
-                  style={{ maxWidth: "100px", minWidth: "100px" }}
-                >
-                  {dateOfBirth}
-                </td>
-                <td
-                  className="py-3 text-truncate"
-                  style={{ maxWidth: "100px", minWidth: "100px" }}
-                >
-                  {gender}
-                </td>
-                <td
-                  className="py-3 text-truncate"
-                  style={{ maxWidth: "100px", minWidth: "100px" }}
-                >
-                  {province}
-                </td>
-              </tr>
+          allUsersInfo
+            .slice(
+              currentPage * itemsPerPage - itemsPerPage,
+              currentPage * itemsPerPage
             )
-          )
+            .map(
+              (
+                { id, fullName, object, dateOfBirth, gender, province },
+                index
+              ) => (
+                <tr key={index} className="w-100">
+                  <td className="text-center py-3">{index + 1}</td>
+                  <td className="d-flex gap-3 py-3">
+                    <Link to={`/edit/${id}`}>
+                      <i className="fa fa-edit"></i>
+                    </Link>
+                    <button
+                      className="btn text-danger m-0 p-0"
+                      onClick={() => handleDeleteUser(id, index)}
+                    >
+                      <i className="fa fa-trash-alt"></i>
+                    </button>
+                    {id}
+                  </td>
+                  <td
+                    className="py-3 text-truncate"
+                    style={{ maxWidth: "100px", minWidth: "100px" }}
+                  >
+                    {fullName}
+                  </td>
+                  <td
+                    className="py-3 text-truncate"
+                    style={{ maxWidth: "100px", minWidth: "100px" }}
+                  >
+                    {object}
+                  </td>
+                  <td
+                    className="py-3 text-truncate"
+                    style={{ maxWidth: "100px", minWidth: "100px" }}
+                  >
+                    {dateOfBirth}
+                  </td>
+                  <td
+                    className="py-3 text-truncate"
+                    style={{ maxWidth: "100px", minWidth: "100px" }}
+                  >
+                    {gender}
+                  </td>
+                  <td
+                    className="py-3 text-truncate"
+                    style={{ maxWidth: "100px", minWidth: "100px" }}
+                  >
+                    {province}
+                  </td>
+                </tr>
+              )
+            )
         ) : (
           <tr>
             <td colSpan={7} className="border">

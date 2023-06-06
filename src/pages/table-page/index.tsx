@@ -3,10 +3,12 @@ import { NavLink } from "react-router-dom";
 import Table from "../../components/table";
 import Pagination from "../../components/pagination.tsx";
 import ItemsPerPage from "../../components/items-per-page/index.tsx";
+import { getLocalStorage } from "../../helpers/getLocalStorage.helper.ts";
 
 const TablePage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [itemsPerPage, setItemsPerPage] = useState<number>(2);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
@@ -17,6 +19,10 @@ const TablePage: React.FC = () => {
   ) => {
     setItemsPerPage(Number(event.target.value));
   };
+
+  const totalPages = Math.ceil(
+    getLocalStorage("covid-form").length / itemsPerPage
+  );
 
   return (
     <header className="container-fluid">
@@ -50,13 +56,21 @@ const TablePage: React.FC = () => {
         </div>
         <div className="mb-4 row">
           <div className="col-lg-12">
-            <Table searchText={searchText.trim()} />
+            <Table
+              searchText={searchText.trim()}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+            />
           </div>
         </div>
         <div className="row">
           <div className="col-lg-12">
             <div className="d-flex justify-content-center align-items-center gap-3">
-              <Pagination />
+              <Pagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                totalPages={totalPages}
+              />
               <ItemsPerPage
                 itemsPerPage={itemsPerPage}
                 handleChangeItemsPerPage={handleChangeItemsPerPage}
