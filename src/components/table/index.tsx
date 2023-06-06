@@ -1,19 +1,24 @@
 import React, { useState } from "react";
 import { IFormData } from "../../interfaces/formData.interface";
 import { Link } from "react-router-dom";
+import {
+  getLocalStorage,
+  removeLocalStorage,
+  setLocalStorage,
+} from "../../helpers/getLocalStorage.helper";
 
 const Table: React.FC = () => {
   const [allUsersInfo, setAllUsersInfo] = useState<IFormData[]>(
-    JSON.parse(localStorage.getItem("covid-form") as string) || []
+    getLocalStorage("covid-form")
   );
 
   const handleDeleteUser = (id: string | undefined, index: number) => {
     if (confirm(`Do you want to delete form with ID: ${id}`)) {
       const updatedUsersInfo: IFormData[] = JSON.parse(
-        localStorage.getItem("covid-form") as string
+        getLocalStorage("covid-form")
       ).filter((_: IFormData, i: number) => i !== index);
-      localStorage.removeItem("covid-form");
-      localStorage.setItem("covid-form", JSON.stringify(updatedUsersInfo));
+      removeLocalStorage("covid-form");
+      setLocalStorage("covid-form", JSON.stringify(updatedUsersInfo));
       setAllUsersInfo(updatedUsersInfo);
     }
   };

@@ -17,6 +17,7 @@ import {
 } from "./formOptions";
 import { validationSchema } from "./validation-schema";
 import generateUniqueId from "../../helpers/generateId.helper";
+import { getLocalStorage, setLocalStorage } from "../../helpers/getLocalStorage.helper";
 
 interface IPropsFormDeclaration {
   isEditMode?: boolean;
@@ -26,9 +27,7 @@ const FormDeclaration: React.FC<IPropsFormDeclaration> = ({ isEditMode }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const localValues: IFormData[] = JSON.parse(
-    localStorage.getItem("covid-form") || "[]"
-  );
+  const localValues: IFormData[] = getLocalStorage("covid-form");
 
   let initialValues: IFormData;
 
@@ -61,14 +60,13 @@ const FormDeclaration: React.FC<IPropsFormDeclaration> = ({ isEditMode }) => {
         (userInfo: IFormData) => userInfo.id === id
       );
       localValues.splice(userInfoIndex, 1, { id: id, ...values });
-      localStorage.setItem("covid-form", JSON.stringify(localValues));
+      setLocalStorage("covid-form", JSON.stringify(localValues));
     } else {
-      localStorage.setItem(
+      setLocalStorage(
         "covid-form",
         JSON.stringify([{ id: generateUniqueId(), ...values }, ...localValues])
       );
     }
-
     navigate("/table");
   };
 
