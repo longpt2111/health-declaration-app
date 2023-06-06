@@ -50,7 +50,7 @@ const TablePage: React.FC = () => {
         </div>
         <div className="mb-4 row">
           <div className="col-lg-12">
-            <Table />
+            <Table searchText={searchText.trim()} />
           </div>
         </div>
         <div className="row">
