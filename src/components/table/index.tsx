@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { IFormData } from "../../interfaces/formData.interface";
 import { Link } from "react-router-dom";
 import {
@@ -10,18 +10,22 @@ import {
 interface IPropsTable {
   searchText: string;
   itemsPerPage: number;
+  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
   currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  allUsersInfo: IFormData[];
+  setAllUsersInfo: React.Dispatch<React.SetStateAction<IFormData[]>>;
 }
 
 const Table: React.FC<IPropsTable> = ({
   searchText,
   itemsPerPage,
+  setTotalPages,
   currentPage,
+  setCurrentPage,
+  allUsersInfo,
+  setAllUsersInfo,
 }) => {
-  const [allUsersInfo, setAllUsersInfo] = useState<IFormData[]>(
-    getLocalStorage("covid-form")
-  );
-
   useEffect(() => {
     const searchResult = getLocalStorage("covid-form").filter(
       ({ id, fullName, object, dateOfBirth, gender }: IFormData) => {
@@ -34,17 +38,36 @@ const Table: React.FC<IPropsTable> = ({
       }
     );
     setAllUsersInfo(searchResult);
+    setTotalPages(Math.ceil(searchResult.length / itemsPerPage));
+    setCurrentPage(1);
     if (!searchText) setAllUsersInfo(getLocalStorage("covid-form"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText]);
 
-  const handleDeleteUser = (id: string | undefined, index: number) => {
+  const handleDeleteUser = (id: string | undefined) => {
     if (confirm(`Do you want to delete form with ID: ${id}`)) {
-      const updatedUsersInfo: IFormData[] = getLocalStorage(
+      const updatedUsersInfo: IFormData[] = allUsersInfo.filter(
+        (userInfo) => userInfo.id !== id
+      );
+      const updatedLocalValues: IFormData[] = getLocalStorage(
         "covid-form"
-      ).filter((_: IFormData, i: number) => i !== index);
+      ).filter((userInfo) => userInfo.id !== id);
+      const lastUserInfoIndex = allUsersInfo.findIndex(
+        (userInfo) => userInfo.id === id
+      );
+      if (
+        lastUserInfoIndex === allUsersInfo.length - 1 &&
+        allUsersInfo.length % itemsPerPage === 1
+      ) {
+        setCurrentPage((prev) => {
+          if (prev === 1) return prev;
+          return prev - 1;
+        });
+      }
       removeLocalStorage("covid-form");
-      setLocalStorage("covid-form", JSON.stringify(updatedUsersInfo));
+      setLocalStorage("covid-form", JSON.stringify(updatedLocalValues));
       setAllUsersInfo(updatedUsersInfo);
+      setTotalPages(Math.ceil(updatedUsersInfo.length / itemsPerPage));
     }
   };
 
@@ -95,7 +118,7 @@ const Table: React.FC<IPropsTable> = ({
                     </Link>
                     <button
                       className="btn text-danger m-0 p-0"
-                      onClick={() => handleDeleteUser(id, index)}
+                      onClick={() => handleDeleteUser(id)}
                     >
                       <i className="fa fa-trash-alt"></i>
                     </button>

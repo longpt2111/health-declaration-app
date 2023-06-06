@@ -4,11 +4,18 @@ import Table from "../../components/table";
 import Pagination from "../../components/pagination.tsx";
 import ItemsPerPage from "../../components/items-per-page/index.tsx";
 import { getLocalStorage } from "../../helpers/getLocalStorage.helper.ts";
+import { IFormData } from "../../interfaces/formData.interface.ts";
 
 const TablePage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [itemsPerPage, setItemsPerPage] = useState<number>(2);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [allUsersInfo, setAllUsersInfo] = useState<IFormData[]>(
+    getLocalStorage("covid-form")
+  );
+  const [totalPages, setTotalPages] = useState<number>(
+    Math.ceil(getLocalStorage("covid-form").length / itemsPerPage)
+  );
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
@@ -18,11 +25,9 @@ const TablePage: React.FC = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setItemsPerPage(Number(event.target.value));
+    setCurrentPage(1);
+    setTotalPages(Math.ceil(allUsersInfo.length / Number(event.target.value)));
   };
-
-  const totalPages = Math.ceil(
-    getLocalStorage("covid-form").length / itemsPerPage
-  );
 
   return (
     <header className="container-fluid">
@@ -59,7 +64,11 @@ const TablePage: React.FC = () => {
             <Table
               searchText={searchText.trim()}
               itemsPerPage={itemsPerPage}
+              setTotalPages={setTotalPages}
               currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              allUsersInfo={allUsersInfo}
+              setAllUsersInfo={setAllUsersInfo}
             />
           </div>
         </div>
