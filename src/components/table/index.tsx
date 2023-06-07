@@ -6,6 +6,7 @@ import {
   removeLocalStorage,
   setLocalStorage,
 } from "../../helpers/getLocalStorage.helper";
+import { formatDate } from "../../helpers/formatDate.helper";
 
 interface IPropsTable {
   searchText: string;
@@ -140,7 +141,7 @@ const Table: React.FC<IPropsTable> = ({
                     className="py-3 text-truncate"
                     style={{ maxWidth: "100px", minWidth: "100px" }}
                   >
-                    {dateOfBirth}
+                    {formatDate(dateOfBirth)}
                   </td>
                   <td
                     className="py-3 text-truncate"
